@@ -2,38 +2,46 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WorkSync β0.2</title>
+<title>WorkSync β0.3</title>
 <style>
-:root{--bg:#f5f6f8;--card:#fff;--ink:#20242b;--muted:#6b7280;--line:#dde2e7;--soft:#eef1f4;--accent:#334155}
+:root{--bg:#f4f6f8;--card:#fff;--ink:#20242b;--muted:#6c7480;--line:#dce1e7;--soft:#edf1f4;--accent:#334155;--danger:#933434;--green:#365f4a}
 *{box-sizing:border-box} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic",sans-serif;background:var(--bg);color:var(--ink);margin:0}
-main{max-width:920px;margin:auto;padding:28px 16px 60px} .card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:20px;margin:14px 0}
-h1{font-size:32px;margin-bottom:8px} h2{margin-top:0} p{line-height:1.7} .muted{color:var(--muted)} .small{font-size:12px}
-input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;font-size:15px;background:white} .field{margin:12px 0} .field label{display:block;font-weight:700;margin-bottom:6px}
+main{max-width:1080px;margin:auto;padding:30px 18px 64px} .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
+h1{font-size:32px;margin:4px 0 8px} h2{margin:0 0 14px} p{line-height:1.7} .muted{color:var(--muted)} .small{font-size:12px}
+.toolbar,.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap} .buttons{display:flex;gap:7px;flex-wrap:wrap}
+button{background:var(--accent);color:white;border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer} button.secondary{background:#e7ebef;color:var(--ink)} button.danger{background:var(--danger)} button.green{background:var(--green)}
+input[type=text],input[type=email],select{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;font-size:15px;background:#fff} .field{margin:10px 0} .field>label{display:block;font-weight:700;margin-bottom:6px}
+.person{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px} .notice{background:#f0f3f6;border-left:4px solid #8b96a5;border-radius:8px;padding:12px 14px}
 .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px} .scale label{border:1px solid #d8dde3;border-radius:9px;padding:10px 5px;text-align:center;font-size:12px;cursor:pointer}
-.scale input{display:none} .scale label:has(input:checked){background:var(--accent);color:white}
-button{background:var(--accent);color:white;border:0;border-radius:10px;padding:12px 17px;font-weight:bold;cursor:pointer;margin:4px} button.secondary{background:#e8ecf0;color:var(--ink)} button.danger{background:#8b2f2f}
-.bar{height:18px;background:#e1e5ea;border-radius:20px;position:relative;margin:8px 0} .dot{position:absolute;width:24px;height:24px;background:var(--accent);border:3px solid white;border-radius:50%;top:-6px;transform:translateX(-50%)}
-.ends,.pcts,.row{display:flex;justify-content:space-between;gap:12px} .metricgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px} .metric{background:var(--soft);padding:14px;border-radius:10px} .metric b{font-size:24px}
-#result,#history{display:none} table{width:100%;border-collapse:collapse} th,td{text-align:left;border-bottom:1px solid var(--line);padding:9px;font-size:13px;vertical-align:top} .wraptable{overflow:auto}
-.person{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px} .tag{display:inline-block;background:var(--soft);padding:5px 9px;border-radius:99px;font-size:12px}
-@media(max-width:650px){.scale{grid-template-columns:1fr}.metricgrid,.person{grid-template-columns:1fr}}
-@media print{body{background:white}main{max-width:none;padding:0}#quiz,#history,.no-print{display:none!important}#result{display:block!important}.card{break-inside:avoid;border-color:#bbb}button{display:none}}
+.scale input{display:none} .scale label:has(input:checked){background:var(--accent);color:#fff}
+.bar{height:18px;background:#e1e5ea;border-radius:20px;position:relative;margin:8px 0} .dot{position:absolute;width:24px;height:24px;background:var(--accent);border:3px solid #fff;border-radius:50%;top:-6px;transform:translateX(-50%)}
+.ends,.pcts{display:flex;justify-content:space-between} .metricgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px} .metric{background:var(--soft);padding:14px;border-radius:10px} .metric b{font-size:24px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px} .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px} .stat .big{font-size:28px;font-weight:800;margin-top:4px}
+.dashgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px} .miniBars .barrow{margin:13px 0} .miniBars .bar{height:12px}
+.tablewrap{overflow:auto} table{width:100%;border-collapse:collapse;min-width:840px} th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle} th{white-space:nowrap;color:#4b5563}
+.filters{display:grid;grid-template-columns:1fr 220px;gap:10px;margin-bottom:12px} .pill{display:inline-block;background:var(--soft);padding:5px 9px;border-radius:999px;font-size:12px}
+#result,#dashboard{display:none}
+@media(max-width:760px){.scale{grid-template-columns:1fr}.metricgrid,.person,.stats,.dashgrid,.filters{grid-template-columns:1fr}}
+@media print{
+ body{background:#fff} main{max-width:none;padding:0} #quiz,#dashboard,.no-print{display:none!important} #result{display:block!important}
+ .card{break-inside:avoid;border-color:#bbb} button{display:none!important}
+}
 </style>
 </head>
 <body><main>
+
 <section id="quiz">
-<h1>WorkSync <small>β0.2</small></h1>
-<p class="muted">仕事での考え方・関わり方・コミュニケーション傾向を可視化する独自アセスメント。全50問・5段階です。</p>
+<div class="toolbar"><div><span class="pill">β0.3</span><h1>WorkSync</h1><p class="muted">仕事での考え方・関わり方・コミュニケーション傾向を可視化する独自アセスメント。</p></div>
+<button class="secondary" onclick="showDashboard()">ダッシュボード</button></div>
 
 <div class="card">
 <h2>受検者情報</h2>
 <div class="person">
 <div class="field"><label>表示名 / ニックネーム *</label><input id="name" type="text" placeholder="例：優香"></div>
+<div class="field"><label>メールアドレス *</label><input id="email" type="email" placeholder="example@company.jp"></div>
 <div class="field"><label>所属・チーム（任意）</label><input id="teamName" type="text" placeholder="例：組織開発"></div>
-<div class="field"><label>受検者コード（任意）</label><input id="personCode" type="text" placeholder="例：WS-001"></div>
 </div>
-<p class="muted small">β0.2では、このブラウザ内に結果を保存します。別の端末で受けた結果は自動では集まりません。</p>
-<button class="secondary" onclick="showHistory()">保存済み結果を見る</button>
+<div class="notice small muted">β0.3の保存先はこのブラウザ内です。メールアドレスは受検者識別のために保存されます。知人や社員に使う場合は、保存目的と取扱いを事前に伝えてください。</div>
 </div>
 
 <div class="card"><b>β版について</b><p class="muted">心理検査・適性検査ではありません。採用可否・昇進・人事評価の判断には使用せず、自己理解とオンボーディングの対話材料として使用してください。</p></div>
@@ -41,67 +49,77 @@ button{background:var(--accent);color:white;border:0;border-radius:10px;padding:
 </section>
 
 <section id="result">
-<div class="row"><div><h1>WorkSync Map</h1><span class="tag">β0.2</span></div><div class="no-print"><button onclick="window.print()">PDF保存 / 印刷</button><button class="secondary" onclick="showHistory()">保存済み結果</button></div></div>
+<div class="toolbar"><div><span class="pill">WorkSync β0.3</span><h1>WorkSync Map</h1></div>
+<div class="buttons no-print"><button class="green" onclick="printCurrent()">PDF出力</button><button class="secondary" onclick="showDashboard()">ダッシュボード</button></div></div>
 <div class="card"><h2 id="resultName"></h2><div id="resultMeta" class="muted"></div></div>
 <p class="muted">50%は中間。端に近いほど今回の回答でその傾向が明確に表れています。</p>
 <div class="card"><h2>基本ワークスタイル</h2><div id="bars"></div></div>
 <div class="card"><h2>チーム行動</h2><div class="metricgrid" id="team"></div></div>
 <div class="card"><h2>コミュニケーション</h2><div class="metricgrid" id="comm"></div></div>
 <div class="card"><h2>Communication Guide</h2><div id="guide"></div></div>
-<div class="card"><h2>回答プロフィール</h2><div class="metricgrid" id="resp"></div><p class="muted">尺度の両端を選ぶ割合は回答スタイルの参考値であり、「性格が極端」という意味ではありません。</p></div>
+<div class="card"><h2>回答プロフィール</h2><div class="metricgrid" id="resp"></div><p class="muted small">尺度の両端を選ぶ割合は回答スタイルの参考値であり、「性格が極端」という意味ではありません。</p></div>
 <div class="no-print"><button onclick="newTest()">別の人が受ける</button></div>
 </section>
 
-<section id="history">
-<div class="row"><div><h1>保存済み結果</h1><p class="muted">この端末・このブラウザに保存されたβ版データです。</p></div><div><button class="secondary" onclick="backToMain()">戻る</button></div></div>
-<div class="card">
-<div class="no-print">
-<button onclick="exportCSV()">CSVを書き出す</button>
-<button class="secondary" onclick="exportJSON()">JSONを書き出す</button>
-<button class="danger" onclick="deleteAll()">すべて削除</button>
+<section id="dashboard">
+<div class="toolbar"><div><span class="pill">LOCAL DASHBOARD</span><h1>WorkSync Dashboard</h1><p class="muted">この端末・このブラウザに保存された結果を集計しています。</p></div>
+<div class="buttons"><button class="secondary" onclick="backToMain()">受検画面へ</button><button onclick="exportCSV()">CSV</button><button class="secondary" onclick="exportJSON()">JSONバックアップ</button></div></div>
+
+<div class="stats">
+<div class="stat"><div class="muted">受検件数</div><div class="big" id="statRecords">0</div></div>
+<div class="stat"><div class="muted">受検者数</div><div class="big" id="statPeople">0</div></div>
+<div class="stat"><div class="muted">所属数</div><div class="big" id="statTeams">0</div></div>
+<div class="stat"><div class="muted">直近受検</div><div class="big" style="font-size:17px" id="statRecent">—</div></div>
 </div>
-<div class="wraptable"><table><thead><tr><th>日時</th><th>名前</th><th>所属</th><th>コード</th><th>結果</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div>
+
+<div class="dashgrid">
+<div class="card"><h2>平均ワークスタイル</h2><div class="miniBars" id="avgCore"></div></div>
+<div class="card"><h2>平均チーム・コミュニケーション</h2><div class="metricgrid" id="avgMetrics"></div></div>
+</div>
+
+<div class="card">
+<div class="toolbar"><h2>受検者一覧</h2><span class="muted small" id="filteredCount"></span></div>
+<div class="filters"><input id="searchText" type="text" placeholder="名前・メールアドレスで検索" oninput="renderDashboard()"><select id="teamFilter" onchange="renderDashboard()"><option value="">すべての所属</option></select></div>
+<div class="tablewrap"><table><thead><tr><th>日時</th><th>名前</th><th>メール</th><th>所属</th><th>自律</th><th>協働</th><th>操作</th></tr></thead><tbody id="dashBody"></tbody></table></div>
+<div class="no-print" style="margin-top:14px"><button class="danger" onclick="deleteAll()">保存データをすべて削除</button></div>
 </div>
 </section>
 
 <script>
 const Q=[["思考形成", 1, "会議では、話しながら考えることで自分の意見がまとまっていく。"], ["思考形成", -1, "重要な意見を伝える前に、一人で考えを整理する時間がほしい。"], ["思考形成", 1, "行き詰まったときは、まず誰かと話して考えを進めることが多い。"], ["思考形成", -1, "議論の場で即答するより、後から考えをまとめて伝える方が得意だ。"], ["情報探索", 1, "仕事を理解するときは、具体例や過去の事例があると考えやすい。"], ["情報探索", -1, "詳細が決まっていなくても、全体像や可能性から考え始められる。"], ["情報探索", 1, "新しい案でも、実際に運用できるかを早い段階で確認したい。"], ["情報探索", -1, "目の前の事実だけでなく、その先の展開を考えることが多い。"], ["判断基準", 1, "難しい判断では、人間関係への影響より一貫した基準を優先する。"], ["判断基準", -1, "正論でも、関係者が納得できないなら進め方を調整したい。"], ["判断基準", 1, "意見が割れたときは、客観的な根拠を比較して結論を出したい。"], ["判断基準", -1, "意思決定では、関係者がどう受け止めるかを重要な材料にする。"], ["行動設計", 1, "締切のある仕事は、早い段階で工程を決めておくと進めやすい。"], ["行動設計", -1, "計画を細かく決めるより、状況を見ながら進め方を変える方がやりやすい。"], ["行動設計", 1, "複数の仕事があるときは、優先順位と予定を先に整理したい。"], ["行動設計", -1, "途中でより良い方法を思いついたら、当初の計画を変更することに抵抗が少ない。"], ["協働志向", 1, "一人で完結できる仕事でも、必要に応じて周囲の知見を取り入れたい。"], ["協働志向", 1, "チームの成果のためなら、自分の担当範囲を越えて協力することがある。"], ["協働志向", -1, "共同作業では調整が増えるため、できるだけ自分だけで完結させたい。"], ["協働志向", 1, "自分の成果だけでなく、チーム全体が進んでいるかを気にかける。"], ["自律遂行", 1, "目的が分かれば、細かな指示がなくても自分で進め方を組み立てられる。"], ["自律遂行", 1, "判断を任されたとき、自分で情報を集めて次の行動を決められる。"], ["自律遂行", -1, "進め方について定期的に細かな確認がないと不安になりやすい。"], ["自律遂行", 1, "初めての仕事でも、必要な情報源を探しながら自走する方だ。"], ["発信性", 1, "仕事に必要だと思う情報は、求められる前でも周囲に共有する。"], ["発信性", 1, "自分の考えが未完成でも、必要なら途中段階で共有できる。"], ["発信性", -1, "問題に気づいても、確信が持てるまでは周囲に伝えないことが多い。"], ["受容性", 1, "自分と異なる意見でも、まず相手の理由を理解しようとする。"], ["受容性", 1, "フィードバックを受けたとき、すぐ反論するより一度内容を検討する。"], ["受容性", -1, "自分のやり方に自信があるときは、他者の提案を取り入れる必要をあまり感じない。"], ["主張性", 1, "相手が上司や経験者でも、必要なら異なる意見を伝えられる。"], ["主張性", 1, "チームの多数意見と違っても、根拠があれば自分の考えを提示する。"], ["主張性", -1, "対立を避けるために、本当は違うと思っていても意見を引っ込めることが多い。"], ["調整性", 1, "意見が対立したとき、双方が重視している点を整理することが多い。"], ["調整性", 1, "話が噛み合っていないとき、論点を言い換えて共通理解を作ろうとする。"], ["調整性", -1, "意見が割れた場面では、調整役になるより自分の主張に集中する方だ。"], ["協働志向", 1, "誰かが困っていると気づいたとき、担当外でも声をかけることが多い。"], ["自律遂行", 1, "上司が不在でも、自分の権限の範囲を判断して仕事を進められる。"], ["発信性", 1, "進捗が予定からずれそうなときは、早めに関係者へ知らせる。"], ["受容性", 1, "相手の説明が分かりにくいときも、意図を確認する質問ができる。"], ["主張性", 1, "不可能な期限や条件を提示された場合、その理由と代案を伝えられる。"], ["調整性", 1, "自分と相手の希望が両立しないとき、第三の選択肢を探すことが多い。"], ["思考形成", -1, "集中して考える仕事では、人との会話を減らした方が力を発揮しやすい。"], ["情報探索", 1, "抽象的な説明だけより、数値・事実・具体的な条件を確認したい。"], ["判断基準", 1, "誰が提案したかより、提案内容そのものの妥当性で判断したい。"], ["行動設計", -1, "急な変更が入っても、その時点で最適な方法へ切り替えやすい。"], ["協働志向", -1, "成果を出すうえで、他の人との連携は最小限の方が集中しやすい。"], ["自律遂行", -1, "判断材料が十分でない仕事では、まず指示を待つことが多い。"], ["発信性", -1, "自分から話しかけるより、必要になった相手から声をかけてもらう方が楽だ。"], ["受容性", 1, "相手の意見を取り入れた結果、自分の当初案を変更することに抵抗が少ない。"]];
 const L=["全く当てはまらない","あまり当てはまらない","どちらともいえない","どちらかといえば当てはまる","当てはまる"];
-const STORAGE_KEY="worksync_records_v02";
+const STORAGE_KEY="worksync_records_v03";
 const poles={"思考形成":["対話形成","内省形成"],"情報探索":["具体探索","構想探索"],"判断基準":["論理基準","調和基準"],"行動設計":["計画設計","適応設計"]};
 const metrics=["協働志向","自律遂行","発信性","受容性","主張性","調整性"];
-let currentRecord=null;
+let currentRecord=null, returnToDashboardAfterPrint=false, originalTitle=document.title;
 
-let box=document.getElementById("qs");
-Q.forEach((q,i)=>{box.innerHTML+=`<div class="card"><small>QUESTION ${i+1} / 50</small><h3>${q[2]}</h3><div class="scale">${L.map((x,j)=>`<label><input type="radio" name="q${i}" value="${j+1}">${x}</label>`).join("")}</div></div>`});
+document.getElementById("qs").innerHTML=Q.map((q,i)=>`<div class="card"><small>QUESTION ${i+1} / ${Q.length}</small><h3>${q[2]}</h3><div class="scale">${L.map((x,j)=>`<label><input type="radio" name="q${i}" value="${j+1}">${x}</label>`).join("")}</div></div>`).join("");
 
-function score(k,a){let v=[];Q.forEach((q,i)=>{if(q[0]==k){let x=a[i];v.push(q[1]==1?x:6-x)}});return Math.round(((v.reduce((x,y)=>x+y,0)/v.length)-1)/4*100)}
-function metric(n,p){return `<div class="metric">${n}<br><b>${p}%</b></div>`}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function uid(){return "WS-"+Date.now().toString(36).toUpperCase()+"-"+Math.random().toString(36).slice(2,6).toUpperCase()}
 function records(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch(e){return []}}
-function saveRecord(r){let rs=records();rs.push(r);localStorage.setItem(STORAGE_KEY,JSON.stringify(rs))}
+function saveRecords(rs){localStorage.setItem(STORAGE_KEY,JSON.stringify(rs))}
+function uid(){return "WS-"+Date.now().toString(36).toUpperCase()+"-"+Math.random().toString(36).slice(2,6).toUpperCase()}
+function score(k,a){let v=[];Q.forEach((q,i)=>{if(q[0]===k){let x=a[i];v.push(q[1]===1?x:6-x)}});return Math.round(((v.reduce((x,y)=>x+y,0)/v.length)-1)/4*100)}
+function metric(n,p){return `<div class="metric">${esc(n)}<br><b>${Math.round(p)}%</b></div>`}
+function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}
 
 function calc(){
- const name=document.getElementById("name").value.trim();
- if(!name){alert("表示名 / ニックネームを入力してください。");document.getElementById("name").focus();return}
- let a={};for(let i=0;i<Q.length;i++){let x=document.querySelector(`input[name=q${i}]:checked`);if(!x){alert(`未回答があります（QUESTION ${i+1}）`);return}a[i]=+x.value}
+ const name=document.getElementById("name").value.trim(), email=document.getElementById("email").value.trim().toLowerCase(), team=document.getElementById("teamName").value.trim();
+ if(!name){alert("表示名 / ニックネームを入力してください。");return}
+ if(!validEmail(email)){alert("メールアドレスを入力してください。");return}
+ let a={};
+ for(let i=0;i<Q.length;i++){let x=document.querySelector(`input[name=q${i}]:checked`);if(!x){alert(`未回答があります（QUESTION ${i+1}）`);return}a[i]=+x.value}
  let s={};[...Object.keys(poles),...metrics].forEach(k=>s[k]=score(k,a));
- let vals=Object.values(a), ext=Math.round(vals.filter(x=>x==1||x==5).length/50*100), neu=Math.round(vals.filter(x=>x==3).length/50*100);
+ let vals=Object.values(a), ext=Math.round(vals.filter(x=>x===1||x===5).length/Q.length*100), neu=Math.round(vals.filter(x=>x===3).length/Q.length*100);
  const now=new Date();
- currentRecord={
-   id:uid(), createdAt:now.toISOString(), displayDate:now.toLocaleString("ja-JP"),
-   name, team:document.getElementById("teamName").value.trim(),
-   personCode:document.getElementById("personCode").value.trim(),
-   scores:s, responseProfile:{extreme:ext,neutral:neu}
- };
- saveRecord(currentRecord); renderResult(currentRecord);
+ currentRecord={id:uid(),createdAt:now.toISOString(),displayDate:now.toLocaleString("ja-JP"),name,email,team,scores:s,responseProfile:{extreme:ext,neutral:neu}};
+ let rs=records();rs.push(currentRecord);saveRecords(rs);renderResult(currentRecord);
 }
 
 function renderResult(r){
- let s=r.scores;
+ currentRecord=r; let s=r.scores;
  document.getElementById("resultName").textContent=r.name+" さんの結果";
- document.getElementById("resultMeta").innerHTML=`受検日時：${esc(r.displayDate)}${r.team?` ／ 所属：${esc(r.team)}`:""}${r.personCode?` ／ コード：${esc(r.personCode)}`:""}`;
+ document.getElementById("resultMeta").innerHTML=`受検日時：${esc(r.displayDate)} ／ メール：${esc(r.email)}${r.team?` ／ 所属：${esc(r.team)}`:""}`;
  document.getElementById("bars").innerHTML=Object.entries(poles).map(([k,v])=>`<h3>${k}</h3><div class="ends"><b>${v[0]}</b><b>${v[1]}</b></div><div class="bar"><span class="dot" style="left:${100-s[k]}%"></span></div><div class="pcts"><span>${s[k]}%</span><span>${100-s[k]}%</span></div>`).join("");
  document.getElementById("team").innerHTML=metric("協働志向",s["協働志向"])+metric("自律遂行",s["自律遂行"]);
  document.getElementById("comm").innerHTML=["発信性","受容性","主張性","調整性"].map(k=>metric(k,s[k])).join("");
@@ -111,29 +129,68 @@ function renderResult(r){
  let conflict=s["主張性"]<45?"異論も歓迎すると明示し、個別にも意見を聞く":s["調整性"]>=65?"共通目的を示し、異なる意見を出してもらう":"論点・共通目的・譲れない条件を整理する";
  document.getElementById("guide").innerHTML=`<h3>仕事を依頼するとき</h3><p>${act}と進めやすいでしょう。</p><h3>相談・会議</h3><p>${think}を用意すると意見を引き出しやすい傾向があります。</p><h3>任せ方</h3><p>${solo}方法が合いやすいでしょう。</p><h3>意見が対立したとき</h3><p>${conflict}とよいでしょう。</p><h3>フィードバック</h3><p>観察した事実・理由・期待する行動を具体的に共有し、本人の見方も確認する方法を基本にします。</p>`;
  document.getElementById("resp").innerHTML=metric("尺度両端の回答",r.responseProfile.extreme)+metric("中立回答",r.responseProfile.neutral);
- document.getElementById("quiz").style.display="none";document.getElementById("history").style.display="none";document.getElementById("result").style.display="block";scrollTo(0,0);
+ showOnly("result"); scrollTo(0,0);
 }
 
+function showOnly(id){["quiz","result","dashboard"].forEach(x=>document.getElementById(x).style.display=x===id?"block":"none")}
 function newTest(){location.reload()}
-function showHistory(){
- document.getElementById("quiz").style.display="none";document.getElementById("result").style.display="none";document.getElementById("history").style.display="block";
- let rs=records().slice().reverse(); let tb=document.getElementById("historyBody");tb.innerHTML="";
- if(!rs.length)tb.innerHTML='<tr><td colspan="6" class="muted">まだ保存データはありません。</td></tr>';
- rs.forEach(r=>{tb.innerHTML+=`<tr><td>${esc(r.displayDate)}</td><td><b>${esc(r.name)}</b></td><td>${esc(r.team||"-")}</td><td>${esc(r.personCode||"-")}</td><td>自律 ${r.scores["自律遂行"]}% / 協働 ${r.scores["協働志向"]}%</td><td><button class="secondary" onclick="openRecord('${r.id}')">開く</button><button class="danger" onclick="deleteOne('${r.id}')">削除</button></td></tr>`});
- scrollTo(0,0);
-}
-function openRecord(id){let r=records().find(x=>x.id===id);if(r){currentRecord=r;renderResult(r)}}
-function deleteOne(id){if(!confirm("この結果を削除しますか？"))return;localStorage.setItem(STORAGE_KEY,JSON.stringify(records().filter(x=>x.id!==id)));showHistory()}
-function deleteAll(){if(!confirm("このブラウザに保存されたWorkSync結果をすべて削除しますか？"))return;localStorage.removeItem(STORAGE_KEY);showHistory()}
-function backToMain(){if(currentRecord)renderResult(currentRecord);else location.reload()}
+function backToMain(){showOnly("quiz");scrollTo(0,0)}
 
-function download(text,name,type){let b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
-function exportJSON(){download(JSON.stringify(records(),null,2),"worksync_records.json","application/json;charset=utf-8")}
+function showDashboard(){
+ populateTeamFilter();renderDashboard();showOnly("dashboard");scrollTo(0,0);
+}
+function populateTeamFilter(){
+ const sel=document.getElementById("teamFilter"), current=sel.value;
+ const teams=[...new Set(records().map(r=>r.team).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ja"));
+ sel.innerHTML='<option value="">すべての所属</option>'+teams.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join("");
+ if(teams.includes(current))sel.value=current;
+}
+function filteredRecords(){
+ const q=document.getElementById("searchText")?.value.trim().toLowerCase()||"", team=document.getElementById("teamFilter")?.value||"";
+ return records().filter(r=>(!q||r.name.toLowerCase().includes(q)||r.email.toLowerCase().includes(q))&&(!team||r.team===team));
+}
+function avg(rs,key){return rs.length?Math.round(rs.reduce((sum,r)=>sum+(r.scores[key]??0),0)/rs.length):0}
+function renderDashboard(){
+ const all=records(), rs=filteredRecords();
+ document.getElementById("statRecords").textContent=all.length;
+ document.getElementById("statPeople").textContent=new Set(all.map(r=>r.email)).size;
+ document.getElementById("statTeams").textContent=new Set(all.map(r=>r.team).filter(Boolean)).size;
+ document.getElementById("statRecent").textContent=all.length?[...all].sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0].displayDate:"—";
+ document.getElementById("filteredCount").textContent=`表示 ${rs.length} 件`;
+ if(!rs.length){
+   document.getElementById("avgCore").innerHTML='<p class="muted">表示対象のデータがありません。</p>';
+   document.getElementById("avgMetrics").innerHTML='<p class="muted">表示対象のデータがありません。</p>';
+ } else {
+   document.getElementById("avgCore").innerHTML=Object.entries(poles).map(([k,v])=>{let p=avg(rs,k);return `<div class="barrow"><div class="ends"><b>${v[0]}</b><b>${v[1]}</b></div><div class="bar"><span class="dot" style="left:${100-p}%"></span></div><div class="pcts"><span>${p}%</span><span>${100-p}%</span></div></div>`}).join("");
+   document.getElementById("avgMetrics").innerHTML=metrics.map(k=>metric(k,avg(rs,k))).join("");
+ }
+ let tb=document.getElementById("dashBody");tb.innerHTML="";
+ if(!rs.length)tb.innerHTML='<tr><td colspan="7" class="muted">保存データはありません。</td></tr>';
+ [...rs].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).forEach(r=>{tb.innerHTML+=`<tr><td>${esc(r.displayDate)}</td><td><b>${esc(r.name)}</b></td><td>${esc(r.email)}</td><td>${esc(r.team||"-")}</td><td>${r.scores["自律遂行"]}%</td><td>${r.scores["協働志向"]}%</td><td><button class="secondary" onclick="openRecord('${r.id}')">結果</button><button class="green" onclick="printRecord('${r.id}')">PDF</button><button class="danger" onclick="deleteOne('${r.id}')">削除</button></td></tr>`});
+}
+function openRecord(id){let r=records().find(x=>x.id===id);if(r)renderResult(r)}
+function safeName(s){return s.replace(/[\\/:*?"<>|\s]+/g,"_")}
+function printCurrent(){
+ if(!currentRecord)return;
+ originalTitle=document.title; document.title=`WorkSync_${safeName(currentRecord.name)}_${currentRecord.createdAt.slice(0,10)}`;
+ window.print();
+}
+function printRecord(id){
+ const r=records().find(x=>x.id===id);if(!r)return;
+ returnToDashboardAfterPrint=true;renderResult(r);setTimeout(()=>printCurrent(),150);
+}
+window.addEventListener("afterprint",()=>{document.title=originalTitle;if(returnToDashboardAfterPrint){returnToDashboardAfterPrint=false;showDashboard()}});
+
+function deleteOne(id){if(!confirm("この結果を削除しますか？"))return;saveRecords(records().filter(x=>x.id!==id));renderDashboard()}
+function deleteAll(){if(!confirm("このブラウザに保存されたWorkSyncデータをすべて削除しますか？"))return;localStorage.removeItem(STORAGE_KEY);populateTeamFilter();renderDashboard()}
+
+function download(text,name,type){let b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
+function exportJSON(){download(JSON.stringify(records(),null,2),"worksync_backup.json","application/json;charset=utf-8")}
 function csvCell(v){return '"'+String(v??"").replace(/"/g,'""')+'"'}
 function exportCSV(){
- let rs=records(), headers=["受検ID","受検日時","名前","所属","受検者コード","対話形成","内省形成","具体探索","構想探索","論理基準","調和基準","計画設計","適応設計","協働志向","自律遂行","発信性","受容性","主張性","調整性","尺度両端回答率","中立回答率"];
+ let rs=records(), headers=["受検ID","受検日時","名前","メールアドレス","所属","対話形成","内省形成","具体探索","構想探索","論理基準","調和基準","計画設計","適応設計","協働志向","自律遂行","発信性","受容性","主張性","調整性","尺度両端回答率","中立回答率"];
  let rows=[headers];
- rs.forEach(r=>{let s=r.scores;rows.push([r.id,r.displayDate,r.name,r.team,r.personCode,s["思考形成"],100-s["思考形成"],s["情報探索"],100-s["情報探索"],s["判断基準"],100-s["判断基準"],s["行動設計"],100-s["行動設計"],s["協働志向"],s["自律遂行"],s["発信性"],s["受容性"],s["主張性"],s["調整性"],r.responseProfile.extreme,r.responseProfile.neutral])});
+ rs.forEach(r=>{let s=r.scores;rows.push([r.id,r.displayDate,r.name,r.email,r.team,s["思考形成"],100-s["思考形成"],s["情報探索"],100-s["情報探索"],s["判断基準"],100-s["判断基準"],s["行動設計"],100-s["行動設計"],s["協働志向"],s["自律遂行"],s["発信性"],s["受容性"],s["主張性"],s["調整性"],r.responseProfile.extreme,r.responseProfile.neutral])});
  download("\uFEFF"+rows.map(row=>row.map(csvCell).join(",")).join("\n"),"worksync_records.csv","text/csv;charset=utf-8");
 }
 </script>
